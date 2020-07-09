@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 
+PROFILE="becod20"
+TARGET_REGION="ap-northeast-2"
 GHOSTSCRIPT_VERSION=9.52
 LAYER_NAME='ghostscript'
 LAYER_VERSION=$(
-  aws lambda publish-layer-version --region "$TARGET_REGION" \
+  aws --profile $PROFILE lambda publish-layer-version --region "$TARGET_REGION" \
     --layer-name $LAYER_NAME \
-    --zip-file fileb:///home/circleci/project/ghostscript.zip \
+    --zip-file fileb://`pwd`/ghostscript.zip \
     --description "Ghostscript v${GHOSTSCRIPT_VERSION}" \
     --query Version \
     --output text
-)
+) 
 
-aws lambda add-layer-version-permission \
+aws --profile $PROFILE lambda add-layer-version-permission \
   --region "$TARGET_REGION" \
   --layer-name $LAYER_NAME \
   --statement-id sid1 \
